@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.azi_music_mobile">
    <application
-        android:label="azi_music_mobile"
+        android:label="4U"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
