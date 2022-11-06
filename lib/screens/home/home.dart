@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'components/drawer.dart';
@@ -140,6 +141,11 @@ class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
 
   String name = Hive.box('settings').get('name', defaultValue: 'Guest');
+
+  void _onItemTapped(int index) {
+    _selectedIndex.value = index;
+    _pageController.jumpToPage(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -392,11 +398,49 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+                    // TODO: mini player
                   ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: ValueListenableBuilder(
+          valueListenable: _selectedIndex,
+          builder: (BuildContext context, int indexValue, Widget? child) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 100),
+              height: 60,
+              child: SalomonBottomBar(
+                currentIndex: indexValue,
+                onTap: _onItemTapped,
+                items: [
+                  SalomonBottomBarItem(
+                    icon: Icon(Icons.home_rounded),
+                    title: Text('首页'),
+                    selectedColor: Theme.of(context).colorScheme.secondary
+                  ),
+                  SalomonBottomBarItem(
+                    icon: Icon(Icons.home_rounded),
+                    title: Text('首页'),
+                    selectedColor: Theme.of(context).colorScheme.secondary
+                  ),
+                  SalomonBottomBarItem(
+                    icon: Icon(Icons.home_rounded),
+                    title: Text('首页'),
+                    selectedColor: Theme.of(context).colorScheme.secondary
+                  ),
+                  SalomonBottomBarItem(
+                    icon: Icon(Icons.home_rounded),
+                    title: Text('首页'),
+                    selectedColor: Theme.of(context).colorScheme.secondary
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     ));

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:supabase/supabase.dart';
 
 class SupaBase {
@@ -9,13 +11,16 @@ class SupaBase {
     final response =
         await client.from('Update').select().order('LatestVersion');
 
-    final List result = response.data as List;
-    return result.isEmpty ? {} : {
-      'LatestVersion': result[0]['LatestVersion'],
-      'LatestUrl': result[0]['LatestUrl'],
-      'arm64-v8a': result[0]['arm64-v8a'],
-      'armeabi-v7a': result[0]['armeabi-v7a'],
-      'universal': result[0]['universal'],
-    };
+    log('response: $response');
+    final List result = response as List;
+    return result.isEmpty
+        ? {}
+        : {
+            'LatestVersion': result[0]['LatestVersion'] ?? '0.0.1',
+            'LatestUrl': result[0]['LatestUrl'] ?? '',
+            'arm64-v8a': result[0]['arm64-v8a'] ?? '',
+            'armeabi-v7a': result[0]['armeabi-v7a'] ?? '',
+            'universal': result[0]['universal'] ?? '',
+          };
   }
 }
