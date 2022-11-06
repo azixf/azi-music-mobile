@@ -2,8 +2,11 @@ import 'dart:math';
 
 import 'package:azi_music_mobile/components/custom_physics.dart';
 import 'package:azi_music_mobile/components/gradient_container.dart';
+import 'package:azi_music_mobile/components/mini_player.dart';
 import 'package:azi_music_mobile/components/snack_bar.dart';
 import 'package:azi_music_mobile/components/text_input_dialog.dart';
+import 'package:azi_music_mobile/screens/mv/mv.dart';
+import 'package:azi_music_mobile/screens/rank/rank.dart';
 import 'package:azi_music_mobile/service/backup_service.dart';
 import 'package:azi_music_mobile/utils/common.dart';
 import 'package:azi_music_mobile/utils/ext_storage.dart';
@@ -35,7 +38,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _pageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -350,7 +354,7 @@ class _HomePageState extends State<HomePage> {
                                                       width: 10.0,
                                                     ),
                                                     Text(
-                                                      '请输入歌曲/歌手/专辑/MV进行搜索',
+                                                      '请输入歌曲/歌手/专辑/MV',
                                                       style: TextStyle(
                                                           color:
                                                               Theme.of(context)
@@ -395,10 +399,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
+                          const Rank(),
+                          const MV(),
                         ],
                       ),
                     ),
-                    // TODO: mini player
+                    const MiniPlayer(),
                   ],
                 ),
               ),
@@ -418,25 +424,17 @@ class _HomePageState extends State<HomePage> {
                 onTap: _onItemTapped,
                 items: [
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.home_rounded),
-                    title: Text('首页'),
-                    selectedColor: Theme.of(context).colorScheme.secondary
-                  ),
+                      icon: const Icon(Icons.home_rounded),
+                      title: const Text('首页'),
+                      selectedColor: Theme.of(context).colorScheme.secondary),
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.home_rounded),
-                    title: Text('首页'),
-                    selectedColor: Theme.of(context).colorScheme.secondary
-                  ),
+                      icon: const Icon(Icons.show_chart_outlined),
+                      title: const Text('排行榜'),
+                      selectedColor: Theme.of(context).colorScheme.secondary),
                   SalomonBottomBarItem(
-                    icon: Icon(Icons.home_rounded),
-                    title: Text('首页'),
-                    selectedColor: Theme.of(context).colorScheme.secondary
-                  ),
-                  SalomonBottomBarItem(
-                    icon: Icon(Icons.home_rounded),
-                    title: Text('首页'),
-                    selectedColor: Theme.of(context).colorScheme.secondary
-                  ),
+                      icon: const Icon(Icons.movie_rounded),
+                      title: const Text('MV'),
+                      selectedColor: Theme.of(context).colorScheme.secondary),
                 ],
               ),
             );

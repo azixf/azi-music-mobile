@@ -141,8 +141,8 @@ class DrawerAppBar extends StatelessWidget {
             alignment: Alignment.topCenter,
             image: AssetImage(
                 Theme.of(context).brightness == Brightness.dark
-                    ? 'assets/images/header-dark.jpg'
-                    : 'assets/images/header.jpg'),
+                    ? 'assets/header-dark.jpg'
+                    : 'assets/header.jpg'),
           ),
         ),
       ),

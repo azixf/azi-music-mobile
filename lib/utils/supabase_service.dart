@@ -14,13 +14,19 @@ class SupaBase {
     log('response: $response');
     final List result = response as List;
     return result.isEmpty
-        ? {}
+        ? {
+          'LatestVersion': '0.0.1',
+            'LatestUrl': '',
+            'arm64-v8a': '',
+            'armeabi-v7a': '',
+            'universal': '',
+        }
         : {
-            'LatestVersion': result[0]['LatestVersion'] ?? '0.0.1',
-            'LatestUrl': result[0]['LatestUrl'] ?? '',
-            'arm64-v8a': result[0]['arm64-v8a'] ?? '',
-            'armeabi-v7a': result[0]['armeabi-v7a'] ?? '',
-            'universal': result[0]['universal'] ?? '',
+            'LatestVersion': result[0]['LatestVersion'],
+            'LatestUrl': result[0]['LatestUrl'],
+            'arm64-v8a': result[0]['arm64-v8a'],
+            'armeabi-v7a': result[0]['armeabi-v7a'],
+            'universal': result[0]['universal'],
           };
   }
 }
