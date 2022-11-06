@@ -1,15 +1,18 @@
-import 'dart:io';
+import 'dart:math';
 
 import 'package:azi_music_mobile/components/custom_physics.dart';
 import 'package:azi_music_mobile/components/gradient_container.dart';
 import 'package:azi_music_mobile/components/snack_bar.dart';
+import 'package:azi_music_mobile/components/text_input_dialog.dart';
 import 'package:azi_music_mobile/service/backup_service.dart';
 import 'package:azi_music_mobile/utils/common.dart';
 import 'package:azi_music_mobile/utils/ext_storage.dart';
 import 'package:azi_music_mobile/utils/supabase_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   bool checked = false;
   bool checkUpdate =
       Hive.box('settings').get('checkUpdate', defaultValue: true);
-  bool autoBackup = Hive.box('settings').get('autoBackup', defaultValue: false);
+  bool autoBackup = Hive.box('settings').get('autoBackup', defaultValue: true);
 
   @override
   void dispose() {
@@ -136,6 +139,8 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   final PageController _pageController = PageController();
 
+  String name = Hive.box('settings').get('name', defaultValue: 'Guest');
+
   @override
   Widget build(BuildContext context) {
     return GradientContainer(
@@ -180,16 +185,208 @@ class _HomePageState extends State<HomePage> {
                                           return FlexibleSpaceBar(
                                             background: GestureDetector(
                                               onTap: () async {
+                                                await showTextInputDialog(
+                                                  context: context,
+                                                  title: 'Name',
+                                                  initialText: name,
+                                                  keyboardType:
+                                                      TextInputType.name,
+                                                  onSubmitted: (value) {
+                                                    Hive.box('settings').put(
+                                                        'name', value.trim());
+                                                    name = value.trim();
+                                                    Navigator.pop(context);
+                                                  },
+                                                );
+                                                setState(() {});
                                               },
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const SizedBox(height: 60),
+                                                  Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 15.0),
+                                                        child: Text(
+                                                          '欢迎您',
+                                                          style: TextStyle(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .secondary,
+                                                              fontSize: 30,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 15.0),
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      children: [
+                                                        ValueListenableBuilder(
+                                                          valueListenable:
+                                                              Hive.box(
+                                                                      'settings')
+                                                                  .listenable(),
+                                                          builder: (BuildContext
+                                                                  context,
+                                                              Box box,
+                                                              Widget? child) {
+                                                            return Text(
+                                                              (box.get('name') ==
+                                                                          null ||
+                                                                      box.get('name') ==
+                                                                          ''
+                                                                  ? 'Guest'
+                                                                  : (box.get('name')
+                                                                          as String)
+                                                                      .split(
+                                                                          ' ')[0]
+                                                                      .toString()),
+                                                              style: const TextStyle(
+                                                                  letterSpacing:
+                                                                      2,
+                                                                  fontSize: 20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         },
                                       ),
                                     ),
+                                    SliverAppBar(
+                                      automaticallyImplyLeading: false,
+                                      pinned: true,
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0,
+                                      stretch: true,
+                                      toolbarHeight: 65,
+                                      title: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: AnimatedBuilder(
+                                          animation: _scrollController,
+                                          builder: (BuildContext context,
+                                              Widget? child) {
+                                            return GestureDetector(
+                                              child: AnimatedContainer(
+                                                width: (!_scrollController
+                                                            .hasClients ||
+                                                        _scrollController
+                                                                .positions
+                                                                .length >
+                                                            1)
+                                                    ? MediaQuery.of(context)
+                                                        .size
+                                                        .width
+                                                    : max(
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            _scrollController
+                                                                .offset
+                                                                .roundToDouble(),
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            75),
+                                                height: 52,
+                                                duration: const Duration(
+                                                    milliseconds: 150),
+                                                padding:
+                                                    const EdgeInsets.all(2.0),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                  color: Theme.of(context)
+                                                      .cardColor,
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                      color: Colors.black26,
+                                                      blurRadius: 5.0,
+                                                      offset: Offset(1.5, 1.5),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Icon(
+                                                      CupertinoIcons.search,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10.0,
+                                                    ),
+                                                    Text(
+                                                      '请输入歌曲/歌手/专辑/MV进行搜索',
+                                                      style: TextStyle(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .secondary,
+                                                          fontSize: 16.0,
+                                                          fontWeight: FontWeight
+                                                              .normal),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                // TODO: add search tap handler
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ];
                                 },
                                 body: Container(),
-                              )
+                              ),
+                              Builder(
+                                builder: (BuildContext context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 4.0, top: 8.0),
+                                    child: Transform.rotate(
+                                      angle: 22 / 7 * 2,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Scaffold.of(context).openDrawer();
+                                        },
+                                        icon: const Icon(
+                                            Icons.horizontal_split_rounded),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ],
