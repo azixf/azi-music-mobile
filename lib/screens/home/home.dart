@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:azi_music_mobile/components/custom_physics.dart';
 import 'package:azi_music_mobile/components/gradient_container.dart';
 import 'package:azi_music_mobile/components/mini_player.dart';
@@ -12,15 +10,15 @@ import 'package:azi_music_mobile/utils/common.dart';
 import 'package:azi_music_mobile/utils/ext_storage.dart';
 import 'package:azi_music_mobile/utils/supabase_service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'components/drawer.dart';
+import 'components/home_body.dart';
+import 'components/search_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -285,99 +283,10 @@ class _HomePageState extends State<HomePage> {
                                         },
                                       ),
                                     ),
-                                    SliverAppBar(
-                                      automaticallyImplyLeading: false,
-                                      pinned: true,
-                                      backgroundColor: Colors.transparent,
-                                      elevation: 0,
-                                      stretch: true,
-                                      toolbarHeight: 65,
-                                      title: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: AnimatedBuilder(
-                                          animation: _scrollController,
-                                          builder: (BuildContext context,
-                                              Widget? child) {
-                                            return GestureDetector(
-                                              child: AnimatedContainer(
-                                                width: (!_scrollController
-                                                            .hasClients ||
-                                                        _scrollController
-                                                                .positions
-                                                                .length >
-                                                            1)
-                                                    ? MediaQuery.of(context)
-                                                        .size
-                                                        .width
-                                                    : max(
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            _scrollController
-                                                                .offset
-                                                                .roundToDouble(),
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width -
-                                                            75),
-                                                height: 52,
-                                                duration: const Duration(
-                                                    milliseconds: 150),
-                                                padding:
-                                                    const EdgeInsets.all(2.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  color: Theme.of(context)
-                                                      .cardColor,
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                      color: Colors.black26,
-                                                      blurRadius: 5.0,
-                                                      offset: Offset(1.5, 1.5),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 10.0,
-                                                    ),
-                                                    Icon(
-                                                      CupertinoIcons.search,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .secondary,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10.0,
-                                                    ),
-                                                    Text(
-                                                      '请输入歌曲/歌手/专辑/MV',
-                                                      style: TextStyle(
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .colorScheme
-                                                                  .secondary,
-                                                          fontSize: 16.0,
-                                                          fontWeight: FontWeight
-                                                              .normal),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                // TODO: add search tap handler
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
+                                    homeSearchBar(_scrollController),
                                   ];
                                 },
-                                body: Container(),
+                                body: const HomeBody(),
                               ),
                               Builder(
                                 builder: (BuildContext context) {
@@ -404,6 +313,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+                    // TODO: edit
                     const MiniPlayer(),
                   ],
                 ),
@@ -444,3 +354,5 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 }
+
+
